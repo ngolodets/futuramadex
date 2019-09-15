@@ -10,15 +10,4 @@ const characterSchema = new mongoose.Schema({
   }]
 });
 
-// characterSchema.set('toObject', {
-//   transform: function(doc, ret, options) {
-//     let returnJson = {
-//       _id: ret._id,
-//       name: ret.name,
-//       quotes: ret.quotes
-//     }
-//     return returnJson;
-//   }
-// })
-
 module.exports = mongoose.model('Character', characterSchema);

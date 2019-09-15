@@ -7,23 +7,23 @@ router.get('/', (req, res) => {
   res.json({type: 'success', message: 'You accessed api routes'})
 });
 
-// GET /api/characters -- get all characters
+// GET /api/characters -- get all characters - works!
 router.get('/characters', (req, res) => {
-  Character.find({}, function(arr, characters) {
+  Character.find({}, function(err, characters) {
     if (err) res.json(err)
     res.json(characters)
   })
 })
 
-// GET /api/characters/:cid - get one character
+// GET /api/characters/:cid - get one character - works!
 router.get('/characters/:cid', (req, res) => {
-  Character.findById(req.params.aid).populate('quotes').exec(function(err, character) {
+  Character.findById(req.params.cid).populate('quotes').exec(function(err, character) {
     if (err) res.status(500).json(err)
     res.status(200).json(character);
   })
 })
 
-// POST /api/characters - create new character
+// POST /api/characters - create new character - works!
 router.post('/characters', (req, res) => {
   let character = new Character({
     name: req.body.name
@@ -33,7 +33,7 @@ router.post('/characters', (req, res) => {
   })
 })
 
-// PUT /api/characters/:cid - update a character
+// PUT /api/characters/:cid - update a character - works!
 router.put('/characters/:cid', (req, res) => {
   Character.findByIdAndUpdate(
     req.params.cid,
@@ -48,7 +48,7 @@ router.put('/characters/:cid', (req, res) => {
   )
 })
 
-// DELETE /api/characters/:cid - delete character
+// DELETE /api/characters/:cid - delete character - works!
 router.delete('/characters/:cid', (req, res) => {
   Character.findByIdAndDelete(
     req.params.cid,
@@ -59,7 +59,7 @@ router.delete('/characters/:cid', (req, res) => {
   )
 })
 
-// GET /api/characters/:cid/quotes - get quotes for the character
+// GET /api/characters/:cid/quotes - get quotes for the character - works!
 router.get('/characters/:cid/quotes', (req, res) => {
   Character.findById(req.params.cid).populate('quotes').exec((err, character) => {
     if (err) res.json(err)
@@ -67,11 +67,27 @@ router.get('/characters/:cid/quotes', (req, res) => {
   })
 })
 
-// GET /api/characters/:cid/quotes/:qid
+// GET /api/characters/:cid/quotes/:qid - works!
 router.get('/characters/:cid/quotes/:qid', (req, res) => {
-  Character.findById(req.params.cid, (err, quote) => {
+  Quote.findById(req.params.qid, (err, quote) => {
     if (err) res.json(err)
     res.json(quote)
+  })
+})
+
+// POST /api/characters/:cid/quotes - create new quote - works!
+router.post('/characters/:cid/quotes', (req, res) => {
+  Character.findById(req.params.cid, function(err, character) {
+    Quote.create({
+      quote: req.body.quote,
+      character: req.params.cid
+    }, function(err, quote) {
+      character.quotes.push(quote)
+      character.save(function(err, character) {
+        if (err) res.json(err)
+        res.json(character)
+      })
+    })
   })
 })
 
