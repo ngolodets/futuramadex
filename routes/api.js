@@ -25,10 +25,12 @@ router.get('/characters/:cid', (req, res) => {
 
 // POST /api/characters - create new character - works!
 router.post('/characters', (req, res) => {
+  console.log('Hitting the post route')
   let character = new Character({
     name: req.body.name
   });
   character.save((err, character) => {
+    if (err) res.json(err)
     res.json(character)
   })
 })
@@ -59,28 +61,28 @@ router.delete('/characters/:cid', (req, res) => {
   )
 })
 
-// GET /api/characters/:cid/quotes - get quotes for the character - works!
-router.get('/characters/:cid/quotes', (req, res) => {
-  Character.findById(req.params.cid).populate('quotes').exec((err, character) => {
+// GET /api/characters/:name/quotes - get quotes for the character - works!
+router.get('/characters/:name/quotes', (req, res) => {
+  Character.find({name: req.params.name}).populate('quotes').exec((err, character) => {
     if (err) res.json(err)
     res.json(character)
   })
 })
 
-// GET /api/characters/:cid/quotes/:qid - works!
-router.get('/characters/:cid/quotes/:qid', (req, res) => {
+// GET /api/characters/:name/quotes/:qid - works!
+router.get('/characters/:name/quotes/:qid', (req, res) => {
   Quote.findById(req.params.qid, (err, quote) => {
     if (err) res.json(err)
     res.json(quote)
   })
 })
 
-// POST /api/characters/:cid/quotes - create new quote - works!
-router.post('/characters/:cid/quotes', (req, res) => {
-  Character.findById(req.params.cid, function(err, character) {
+// POST /api/characters/:name/quotes - create new quote - works!
+router.post('/characters/:name/quotes', (req, res) => {
+  Character.find({name: req.params.name}, function(err, character) {
     Quote.create({
       quote: req.body.quote,
-      character: req.params.cid
+      character: req.params.name
     }, function(err, quote) {
       character.quotes.push(quote)
       character.save(function(err, character) {
@@ -91,9 +93,9 @@ router.post('/characters/:cid/quotes', (req, res) => {
   })
 })
 
-// DELETE /api/characters/:cid/quotes/:qid - delete a quote from a character
-router.delete('/characters/:cid/quotes/:qid', (req, res) => {
-  Character.findById(req.params.cid, (err, character) => {
+// DELETE /api/characters/:name/quotes/:qid - delete a quote from a character
+router.delete('/characters/:name/quotes/:qid', (req, res) => {
+  Character.find({name: req.params.name}, (err, character) => {
     character.quotes.pull(req.params.qid)
     character.save(err => {
       if (err) res.json(err)
