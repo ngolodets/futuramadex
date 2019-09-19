@@ -22,6 +22,12 @@ router.get('/characters/:cid', (req, res) => {
     res.status(200).json(character);
   })
 })
+// router.get('/characters/:cid', (req, res) => {
+//   Character.findById(req.params.cid, function(err, characters) {
+//     if (err) res.json(err)
+//     res.json(characters)
+//   })
+// })
 
 // POST /api/characters - create new character - works!
 router.post('/characters', (req, res) => {
@@ -40,7 +46,8 @@ router.put('/characters/:cid', (req, res) => {
   Character.findByIdAndUpdate(
     req.params.cid,
     {
-      name: req.body.name
+      name: req.body.name,
+      quote: req.body.quote
     },
     {new: true},
     (err, character) => {
@@ -61,47 +68,48 @@ router.delete('/characters/:cid', (req, res) => {
   )
 })
 
-// GET /api/characters/:name/quotes - get quotes for the character - works!
-router.get('/characters/:name/quotes', (req, res) => {
-  Character.find({name: req.params.name}).populate('quotes').exec((err, character) => {
-    if (err) res.json(err)
-    res.json(character)
-  })
-})
+// GET /api/characters/:cid/quotes - get quotes for the character - works!
+// router.get('/characters/:cid/quotes', (req, res) => {
+//   Character.findById(req.params.cid).populate('quotes').exec((err, character) => {
+//     if (err) res.json(err)
+//     res.json(character)
+//   })
+// })
 
-// GET /api/characters/:name/quotes/:qid - works!
-router.get('/characters/:name/quotes/:qid', (req, res) => {
-  Quote.findById(req.params.qid, (err, quote) => {
-    if (err) res.json(err)
-    res.json(quote)
-  })
-})
 
-// POST /api/characters/:name/quotes - create new quote - works!
-router.post('/characters/:name/quotes', (req, res) => {
-  Character.find({name: req.params.name}, function(err, character) {
-    Quote.create({
-      quote: req.body.quote,
-      character: req.params.name
-    }, function(err, quote) {
-      character.quotes.push(quote)
-      character.save(function(err, character) {
-        if (err) res.json(err)
-        res.json(character)
-      })
-    })
-  })
-})
+// GET /api/characters/:cid/quotes/:qid - works!
+// router.get('/characters/:cid/quotes/:qid', (req, res) => {
+//   Quote.findById(req.params.qid, (err, quote) => {
+//     if (err) res.json(err)
+//     res.json(quote)
+//   })
+// })
 
-// DELETE /api/characters/:name/quotes/:qid - delete a quote from a character
-router.delete('/characters/:name/quotes/:qid', (req, res) => {
-  Character.find({name: req.params.name}, (err, character) => {
-    character.quotes.pull(req.params.qid)
-    character.save(err => {
-      if (err) res.json(err)
-      res.json(character)
-    })
-  })
-})
+// POST /api/characters/:cid/quotes - create new quote - works!
+// router.post('/characters/:cid/quotes', (req, res) => {
+//   Character.findById(req.params.cid, function(err, character) {
+//     Quote.create({
+//       quote: req.body.quote,
+//       character: req.params.cid
+//     }, function(err, quote) {
+//       character.quotes.push(quote)
+//       character.save(function(err, character) {
+//         if (err) res.json(err)
+//         res.json(character)
+//       })
+//     })
+//   })
+// })
+
+// DELETE /api/characters/:cid/quotes/:qid - delete a quote from a character
+// router.delete('/characters/:cid/quotes/:qid', (req, res) => {
+//   Character.findById(req.params.cid, (err, character) => {
+//     character.quotes.pull(req.params.qid)
+//     character.save(err => {
+//       if (err) res.json(err)
+//       res.json(character)
+//     })
+//   })
+// })
 
 module.exports = router;
