@@ -69,47 +69,47 @@ router.delete('/characters/:cid', (req, res) => {
 })
 
 // GET /api/characters/:cid/quotes - get quotes for the character - works!
-// router.get('/characters/:cid/quotes', (req, res) => {
-//   Character.findById(req.params.cid).populate('quotes').exec((err, character) => {
-//     if (err) res.json(err)
-//     res.json(character)
-//   })
-// })
+router.get('/characters/:cid/quotes', (req, res) => {
+  Character.findById(req.params.cid).populate('quotes').exec((err, character) => {
+    if (err) res.json(err)
+    res.json(character)
+  })
+})
 
 
 // GET /api/characters/:cid/quotes/:qid - works!
-// router.get('/characters/:cid/quotes/:qid', (req, res) => {
-//   Quote.findById(req.params.qid, (err, quote) => {
-//     if (err) res.json(err)
-//     res.json(quote)
-//   })
-// })
+router.get('/characters/:cid/quotes/:qid', (req, res) => {
+  Quote.findById(req.params.qid, (err, quote) => {
+    if (err) res.json(err)
+    res.json(quote)
+  })
+})
 
 // POST /api/characters/:cid/quotes - create new quote - works!
-// router.post('/characters/:cid/quotes', (req, res) => {
-//   Character.findById(req.params.cid, function(err, character) {
-//     Quote.create({
-//       quote: req.body.quote,
-//       character: req.params.cid
-//     }, function(err, quote) {
-//       character.quotes.push(quote)
-//       character.save(function(err, character) {
-//         if (err) res.json(err)
-//         res.json(character)
-//       })
-//     })
-//   })
-// })
+router.post('/characters/:cid/quotes', (req, res) => {
+  Character.findById(req.params.cid, function(err, character) {
+    Quote.create({
+      quote: req.body.quote,
+      character: req.params.cid
+    }, function(err, quote) {
+      character.quotes.push(quote)
+      character.save(function(err, character) {
+        if (err) res.json(err)
+        res.json(character)
+      })
+    })
+  })
+})
 
 // DELETE /api/characters/:cid/quotes/:qid - delete a quote from a character
-// router.delete('/characters/:cid/quotes/:qid', (req, res) => {
-//   Character.findById(req.params.cid, (err, character) => {
-//     character.quotes.pull(req.params.qid)
-//     character.save(err => {
-//       if (err) res.json(err)
-//       res.json(character)
-//     })
-//   })
-// })
+router.delete('/characters/:cid/quotes/:qid', (req, res) => {
+  Character.findById(req.params.cid, (err, character) => {
+    character.quotes.pull(req.params.qid)
+    character.save(err => {
+      if (err) res.json(err)
+      res.json(character)
+    })
+  })
+})
 
 module.exports = router;
